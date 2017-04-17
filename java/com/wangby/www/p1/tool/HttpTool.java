@@ -1,4 +1,4 @@
-package com.wangby.www.p1;
+package com.wangby.www.p1.tool;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -19,6 +19,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
+ * 网络通信工具
  * Created by 王炳炎zer on 2017/4/13.
  */
 public class HttpTool {
@@ -81,7 +82,7 @@ public class HttpTool {
                 RequestParams params=new RequestParams("http://123.206.85.134/wang/updata.apk");
                 params.setAutoResume(true);
                 params.setSaveFilePath(Environment.getExternalStorageDirectory().getPath() + File.separator+ "updata.apk");
-                x.http().get(params,  new Callback.ProgressCallback<File>(){
+                    x.http().get(params,  new Callback.ProgressCallback<File>(){
                     @Override
                     public void onWaiting() {
                     }
@@ -147,7 +148,6 @@ public class HttpTool {
         intent.setDataAndType(Uri.fromFile(result),"application/vnd.android.package-archive");
         mContext.startActivity(intent);
 //       mContext.startActivityForResult(intent, 0);
-
     }
 
 

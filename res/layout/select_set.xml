@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        style="@style/TitleStyle"
+        android:text="设置" />
+
+    <!--<RelativeLayout-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+        <!--<TextView-->
+            <!--android:id="@+id/set1"-->
+            <!--android:text="更新设置"-->
+            <!--android:textSize="20dp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content" />-->
+        <!--<TextView-->
+            <!--android:id="@+id/set2"-->
+            <!--android:layout_below="@id/set1"-->
+            <!--android:text="更新已关闭"-->
+            <!--android:textSize="20dp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content" />-->
+        <!--<CheckBox-->
+            <!--android:id="@+id/cb_box"-->
+            <!--android:clickable="false"-->
+            <!--android:focusable="false"-->
+            <!--android:focusableInTouchMode="false"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"/>-->
+        <!--<View-->
+        <!--android:background="#000"-->
+        <!--android:layout_below="@id/set2"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"/>-->
+    <!--</RelativeLayout>-->
+    <com.wangby.www.p1.view.SelectLayout
+        xmlns:mobilesafe="http://schemas.android.com/apk/res/com.wangby.www.p1"
+        android:id="@+id/upview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        mobilesafe:destitle="自动更新设置"
+        mobilesafe:desoff="自动更新已关闭"
+        mobilesafe:deson="自动更新已开启"></com.wangby.www.p1.view.SelectLayout>
+    <com.wangby.www.p1.view.SelectLayout
+        xmlns:mobilesafe="http://schemas.android.com/apk/res/com.wangby.www.p1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        mobilesafe:destitle="模式"
+        mobilesafe:desoff="夜间模式"
+        mobilesafe:deson="白天模式"></com.wangby.www.p1.view.SelectLayout>
+
+
+</LinearLayout>

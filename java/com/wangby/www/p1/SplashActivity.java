@@ -13,8 +13,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.wangby.www.p1.tool.DataTool;
+import com.wangby.www.p1.tool.HttpTool;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,36 +44,10 @@ public class SplashActivity extends Activity {
 
     ProgressDialog progressDialog;
     TextView version;
+    RelativeLayout splash;
     int mLocalVersionCode;
     String versionDes;
     String downloadurl;
-    /**
-     * 检查版本更新
-     * 并进行处理
-     */
-    private Handler mHandler = new Handler(){
-        @RequiresApi(api = Build.VERSION_CODES.M)
-        public void handleMessage(android.os.Message msg){
-            System.out.print(msg.what);
-            switch (msg.what){
-                case JOSN_ERROR:
-                    Toast.makeText(SplashActivity.this,"资源内容异常",Toast.LENGTH_SHORT).show();
-                    enterHome();
-                    break;
-                case URL_ERROR:
-                    Toast.makeText(SplashActivity.this,"URL地址异常",Toast.LENGTH_SHORT).show();
-                    enterHome();
-                    break;
-                case ENTER_HOME:
-                    enterHome();
-                    break;
-                case UPDATE_VERSION:
-                    showUpdate();
-                    break;
-            }
-        };
-    };
-
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,18 +56,31 @@ public class SplashActivity extends Activity {
         setContentView(R.layout.splash);
         initUI();
         initData();
-        checkVersion();
+
+//        initAnimation();
     }
+
 
     /**
-     * 离开界面
-     * 进入home
+     * 添加淡入动画效果
+     */
+//    private void initAnimation() {
+//        AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
+//        alphaAnimation.setDuration(5000);
+//        splash.startAnimation(alphaAnimation);
+//    }
+
+    /**
+     * 更新是否成功
+     * 都要进入home
      */
     @Override
-    protected void onResume() {
+    protected void onRestart() {
+        super.onRestart();
+        super.onStart();
+        super.onResume();
         enterHome();
     }
-
 
     /**
      * 更新对话框，提示更新
@@ -112,6 +103,15 @@ public class SplashActivity extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 enterHome();
+            }
+        });
+
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                //即使用户点击取消,也需要让其进入应用程序主界面
+                enterHome();
+                dialog.dismiss();
             }
         });
         builder.show();
@@ -172,11 +172,9 @@ public class SplashActivity extends Activity {
                     connection.setConnectTimeout(10000);
                     connection.setReadTimeout(10000);
                     if(connection.getResponseCode()==200){
-                        System.out.print(connection.getResponseCode());
                         InputStream is = connection.getInputStream();
                         josn = HttpTool.streamToString(is);
                     }
-                    System.out.print(josn);
                     JSONObject jsonObject = new JSONObject(josn);
                     downloadurl = jsonObject.getString("downloadurl");
                     String versionCode = jsonObject.getString("versionCode");
@@ -222,7 +220,14 @@ public class SplashActivity extends Activity {
     private void initData() {
         version.setText("version"+getVersion());
         mLocalVersionCode = getVersionCode();
-        
+        if(DataTool.getBooleanConfig(this,DataTool.UP_VERSION)){
+            checkVersion();
+        }else {
+            getWindow().getDecorView().postDelayed(new Runnable() {
+                public void run()
+                {SplashActivity.this.enterHome();}
+            }, 2000L);
+        }
     }
 
 
@@ -231,7 +236,7 @@ public class SplashActivity extends Activity {
      */
     private void initUI() {
         version = (TextView) findViewById(R.id.version);
-
+        splash = (RelativeLayout) findViewById(R.id.splash);
     }
 
 
@@ -267,6 +272,35 @@ public class SplashActivity extends Activity {
         }
         return 0;
     }
+
+
+
+    /**
+     * 检查版本更新
+     * 并进行处理
+     */
+    private Handler mHandler = new Handler(){
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        public void handleMessage(android.os.Message msg){
+            switch (msg.what){
+                case JOSN_ERROR:
+                    Toast.makeText(SplashActivity.this,"资源内容异常",Toast.LENGTH_SHORT).show();
+                    enterHome();
+                    break;
+                case URL_ERROR:
+                    Toast.makeText(SplashActivity.this,"URL地址异常",Toast.LENGTH_SHORT).show();
+                    enterHome();
+                    break;
+                case ENTER_HOME:
+                    enterHome();
+                    break;
+                case UPDATE_VERSION:
+                    showUpdate();
+                    break;
+            }
+        };
+    };
+
 
 
 }
